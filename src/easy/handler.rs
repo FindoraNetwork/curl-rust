@@ -807,6 +807,17 @@ impl<H> Easy2<H> {
         }
     }
 
+    /// ABSTRACT_UNIX_SOCKET, ref: `man unix(7)`
+    pub fn unix_socket_path_aus(&mut self, addr: &[u8]) -> Result<(), Error> {
+        unsafe {
+            self.cvt(curl_sys::curl_easy_setopt(
+                self.inner.handle,
+                curl_sys::CURLOPT_ABSTRACT_UNIX_SOCKET,
+                addr,
+            ))
+        }
+    }
+
     // =========================================================================
     // Internal accessors
 
