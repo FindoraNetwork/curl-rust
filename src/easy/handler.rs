@@ -807,8 +807,19 @@ impl<H> Easy2<H> {
         }
     }
 
-    /// ABSTRACT_UNIX_SOCKET, ref: `man unix(7)`
-    pub fn unix_socket_path_aus(&mut self, addr: &[u8]) -> Result<(), Error> {
+    /// Provides the ABSTRACT UNIX SOCKET which this handle will work with.
+    ///
+    /// The `addr` param can be any bytes.
+    ///
+    /// This function is an alternative to [`Easy2::unix_socket`] and [`Easy2::unix_socket_path`] that supports
+    /// ABSTRACT_UNIX_SOCKET(`man 7 unix` on Linux) address.
+    ///
+    /// By default this option is not set and corresponds to
+    /// [`CURLOPT_ABSTRACT_UNIX_SOCKET`](https://curl.haxx.se/libcurl/c/CURLOPT_ABSTRACT_UNIX_SOCKET.html).
+    ///
+    /// NOTE: this API can only be used on Linux OS.
+    #[cfg(target_os = "linux")]
+    pub fn abstract_unix_socket(&mut self, addr: &[u8]) -> Result<(), Error> {
         unsafe {
             self.cvt(curl_sys::curl_easy_setopt(
                 self.inner.handle,
